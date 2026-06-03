@@ -91,7 +91,7 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
             <span className="uppercase tracking-widest text-[9px] font-bold">{path.length === 1 ? 'Category' : 'Back'}</span>
           </button>
 
-          <span className="text-[9px] font-bold text-[#8B735B] uppercase tracking-widest font-mono">
+          <span className="text-[10px] font-medium text-[#8B735B] uppercase tracking-widest font-sans italic">
             Symptom 0{path.length}/08
           </span>
         </div>
@@ -108,7 +108,7 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
       {/* Center Question Segment */}
       <div className="my-5 space-y-4 flex-1 flex flex-col justify-center">
         <div>
-          <h3 className="text-xl font-serif font-black text-[#2D2B28] leading-tight tracking-tight">
+          <h3 className="text-xl font-serif font-medium text-[#2D2B28] leading-tight tracking-tight">
             {currentQuestion.text}
           </h3>
         </div>
@@ -125,9 +125,9 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
                 <div className="h-2 w-2 rounded-full bg-[#2D2B28] scale-100" />
               </div>
               <div className="flex-1 min-w-0 pr-1">
-                <h4 className="text-xs font-extrabold text-[#2D2B28] leading-tight">{option.label}</h4>
+                <h4 className="text-xs font-medium text-[#2D2B28] leading-tight font-sans">{option.label}</h4>
                 {option.description && (
-                  <p className="text-[11px] text-[#2D2B28]/60 mt-1 leading-relaxed">{option.description}</p>
+                  <p className="text-[11px] text-[#2D2B28]/60 mt-1 leading-relaxed font-sans">{option.description}</p>
                 )}
               </div>
               <ChevronRight className="h-4 w-4 text-[#D4D1C9] shrink-0 self-center" />
@@ -142,18 +142,18 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
           <div className="flex items-center gap-2 mb-1.5 justify-between">
             <div className="flex items-center gap-2">
               <Lightbulb className="h-4 w-4 text-[#8B735B] stroke-[1.5]" />
-              <h4 className="text-[9px] font-bold text-[#8B735B] uppercase tracking-widest font-mono">Why we ask this</h4>
+              <h4 className="text-[10px] font-medium text-[#8B735B] uppercase tracking-widest font-sans italic">Why we ask this</h4>
             </div>
             <button
               onClick={() => setShowingTip(!showingTip)}
-              className="text-[9px] text-[#2D2B28]/60 uppercase tracking-widest font-bold hover:text-[#2D2B28] underline font-mono cursor-pointer"
+              className="text-[10px] text-[#2D2B28]/60 uppercase tracking-widest font-medium hover:text-[#2D2B28] underline font-sans italic cursor-pointer"
             >
               {showingTip ? 'Hide info' : 'Read info'}
             </button>
           </div>
           
           {showingTip && (
-            <p className="text-[11px] text-[#2D2B28]/80 leading-relaxed font-serif italic pl-1.5 border-l border-[#8B735B]">
+            <p className="text-[11px] text-[#2D2B28]/80 leading-relaxed font-sans italic pl-1.5 border-l border-[#8B735B]">
               {currentQuestion.whyWeAsk}
             </p>
           )}
@@ -163,7 +163,7 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
         <div className="flex justify-center">
           <button 
             onClick={() => onOpenQuickChat(currentQuestion.text)}
-            className="flex items-center gap-1.5 text-[9px] uppercase tracking-widest text-[#2D2B28]/85 hover:text-[#2D2B28] font-bold font-mono transition-opacity group cursor-pointer"
+            className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-[#2D2B28]/85 hover:text-[#2D2B28] font-medium font-sans italic transition-opacity group cursor-pointer"
           >
             <Sparkles className="h-3.5 w-3.5 text-[#8B735B] group-hover:rotate-6 transition-transform" />
             <span>Need advice? Ask Chef Crumb</span>

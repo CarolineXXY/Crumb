@@ -29,15 +29,15 @@ export function MobileFrame({ children, activeTab, setActiveTab, onOpenGlobalCha
       <div className="w-full max-w-[412px] h-[780px] bg-white rounded-[40px] shadow-2xl border-[6px] border-[#2D2B28] flex flex-col overflow-hidden relative z-10 transition-all duration-300">
         {/* Notch & Sensor bar (styled high-contrast editorial) */}
         <div className="absolute top-0 inset-x-0 h-7 bg-[#2D2B28] flex items-center justify-between px-6 z-45 pointer-events-none">
-          <span className="text-[9px] font-bold text-[#F2F0EB]/90 font-mono">09:14</span>
+          <span className="text-[9px] font-medium text-[#F2F0EB]/90 font-sans">09:14</span>
           {/* Physical camera notch circle */}
           <div className="w-16 h-3 bg-[#1F1E1C] rounded-full mx-auto" />
-          <div className="flex items-center gap-1.5 text-[#F2F0EB]/80 font-mono">
+          <div className="flex items-center gap-1.5 text-[#F2F0EB]/80 font-sans">
             {/* Battery Indicator */}
             <div className="w-4 h-2 border border-[#F2F0EB]/40 rounded-2xs p-0.5 flex items-center">
               <div className="h-full w-2 bg-[#FAF9F6] rounded-3xs" />
             </div>
-            <span className="text-[8px] font-bold">100%</span>
+            <span className="text-[8px] font-medium">100%</span>
           </div>
         </div>
 

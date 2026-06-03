@@ -17,9 +17,9 @@ export function HistoryView({ history, onSelectSession, onClearHistory }: Histor
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-[9px] font-bold text-[#8B735B] uppercase tracking-widest font-mono">Archive Logs</span>
-            <h2 className="text-2xl font-serif font-black text-[#2D2B28] tracking-tight mt-0.5">My Diagnostic Journal</h2>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">Here reside the results, science insights, and roadmap guides from your past sessions.</p>
+            <span className="text-[10px] font-medium text-[#8B735B] uppercase tracking-widest font-sans italic">Archive Logs</span>
+            <h2 className="text-2xl font-serif font-normal text-[#2D2B28] tracking-tight mt-0.5">My Diagnostic Journal</h2>
+            <p className="text-xs text-[#2D2B28]/70 mt-1 leading-relaxed font-sans">Here reside the results, science insights, and roadmap guides from your past sessions.</p>
           </div>
           
           {history.length > 0 && (
@@ -43,8 +43,8 @@ export function HistoryView({ history, onSelectSession, onClearHistory }: Histor
               <ClipboardList className="h-6 w-6 text-[#2D2B28] stroke-[1.5]" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-[#2D2B28] uppercase tracking-wide font-mono">Journal is Empty</h3>
-              <p className="text-[11px] text-stone-500 mt-1 max-w-[200px] leading-relaxed mx-auto">
+              <h3 className="text-xs font-medium text-[#2D2B28] uppercase tracking-wide font-sans italic">Journal is Empty</h3>
+              <p className="text-[11px] text-[#2D2B28]/70 mt-1 max-w-[200px] leading-relaxed mx-auto font-sans">
                 No past troubleshooting audits recorded yet. Run a diagnostics wizard to save your first bake report!
               </p>
             </div>
@@ -67,8 +67,8 @@ export function HistoryView({ history, onSelectSession, onClearHistory }: Histor
 
                   <div className="space-y-3 pl-1.5">
                     {/* Category Label & Month-Day Date Info */}
-                    <div className="flex items-center justify-between text-[9px] font-mono text-stone-400">
-                      <span className="font-bold text-[#8B735B] uppercase tracking-wider">
+                    <div className="flex items-center justify-between text-[10px] font-sans italic text-stone-400">
+                      <span className="font-medium text-[#8B735B] uppercase tracking-wider">
                         {catInfo?.name}
                       </span>
                       <span className="flex items-center gap-1 uppercase tracking-wider">
@@ -82,10 +82,10 @@ export function HistoryView({ history, onSelectSession, onClearHistory }: Histor
 
                     {/* Diagnosis details */}
                     <div>
-                      <h4 className="text-xs font-serif font-black text-[#2D2B28] group-hover:text-[#8B735B] leading-tight">
+                      <h4 className="text-xs font-serif font-medium text-[#2D2B28] group-hover:text-[#8B735B] leading-tight">
                         {diagnosis.title}
                       </h4>
-                      <p className="text-[11px] text-stone-500 mt-1 truncate leading-relaxed">
+                      <p className="text-[11px] text-[#2D2B28]/70 mt-1 truncate leading-relaxed font-sans">
                         "{diagnosis.summary}"
                       </p>
                     </div>
@@ -94,12 +94,12 @@ export function HistoryView({ history, onSelectSession, onClearHistory }: Histor
                     <div className="pt-2 border-t border-[#D4D1C9]/50 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <ShieldCheck className="h-3.5 w-3.5 text-[#8B735B] stroke-[1.5]" />
-                        <span className="text-[9.5px] font-bold text-stone-500 font-sans">
+                        <span className="text-[9.5px] font-medium text-stone-600 font-sans">
                           {diagnosis.confidence} Confidence
                         </span>
                       </div>
                       
-                      <span className="text-[9px] font-extrabold text-[#2D2B28] uppercase tracking-wider font-mono">
+                      <span className="text-[10px] font-medium text-[#2D2B28] uppercase tracking-wider font-sans italic">
                         Inspect Report ➔
                       </span>
                     </div>
@@ -112,7 +112,7 @@ export function HistoryView({ history, onSelectSession, onClearHistory }: Histor
       </div>
 
       {/* Proactive Tip */}
-      <div className="bg-white rounded-xl p-3 text-center border border-[#D4D1C9] text-[10px] text-[#2D2B28]/80 leading-relaxed font-mono">
+      <div className="bg-white rounded-xl p-3 text-center border border-[#D4D1C9] text-[10px] text-[#2D2B28]/70 leading-relaxed font-sans italic">
          Failed bakes are just nutritious entries in your personal scientific research. Science is delicious!
       </div>
     </div>

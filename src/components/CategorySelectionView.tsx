@@ -37,9 +37,9 @@ export function CategorySelectionView({ onSelectCategory, onCancel }: CategorySe
         </button>
 
         <div>
-          <span className="text-[9px] font-bold text-[#8B735B] uppercase tracking-widest font-mono">Stage 1: Classification</span>
-          <h2 className="text-2xl font-serif font-black text-[#2D2B28] tracking-tight mt-0.5">What did you bake?</h2>
-          <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+          <span className="text-[10px] font-medium text-[#8B735B] uppercase tracking-widest font-sans italic">Stage 1: Classification</span>
+          <h2 className="text-2xl font-serif font-normal text-[#2D2B28] tracking-tight mt-0.5">What did you bake?</h2>
+          <p className="text-xs text-[#2D2B28]/70 mt-1 leading-relaxed font-sans">
             Pick a recipe category. We customize our chemical diagnostics questions to fit your specific starch structure.
           </p>
         </div>
@@ -57,17 +57,17 @@ export function CategorySelectionView({ onSelectCategory, onCancel }: CategorySe
               {IconMap(cat.icon)}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-xs uppercase tracking-wider font-extrabold text-[#2D2B28] flex items-center justify-between">
+              <h3 className="text-xs uppercase tracking-widest font-medium text-[#2D2B28] flex items-center justify-between">
                 <span>{cat.name}</span>
               </h3>
-              <p className="text-[11px] text-stone-500 mt-1 leading-relaxed">{cat.description}</p>
+              <p className="text-[11px] text-[#2D2B28]/85 mt-1 leading-relaxed font-sans">{cat.description}</p>
             </div>
           </button>
         ))}
       </div>
 
       {/* Educational message */}
-      <div className="bg-white rounded-xl p-3 text-center border border-[#D4D1C9] text-[10.5px] text-[#2D2B28]/80 leading-relaxed font-mono">
+      <div className="bg-white rounded-xl p-3 text-center border border-[#D4D1C9] text-[10px] text-[#2D2B28]/70 leading-relaxed font-sans italic">
          Every flour behaves uniquely under thermal hydration. Let's calibrate your specific failure map.
       </div>
     </div>

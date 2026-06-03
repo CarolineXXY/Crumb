@@ -28,16 +28,16 @@ export function HomeView({ onStartNewTrouble, history, onSelectSession, onOpenQu
             <span className="text-xl">🥖</span>
           </div>
           <div>
-            <p className="text-[10px] font-bold text-[#8B735B] uppercase tracking-widest font-mono">Forensic Kitchen Lab</p>
-            <h2 className="text-xl font-serif font-black tracking-tight text-[#2D2B28]">Welcome, Baker</h2>
+            <p className="text-[10px] font-medium text-[#8B735B] uppercase tracking-widest font-sans italic">Forensic Kitchen Lab</p>
+            <h2 className="text-2xl font-serif font-normal tracking-tight text-[#2D2B28]">Welcome, Baker</h2>
           </div>
         </div>
 
         <div className="bg-white rounded-2xl p-4 border border-[#D4D1C9] shadow-xs">
-          <p className="text-[#2D2B28] text-xs leading-relaxed italic font-serif">
+          <p className="text-[#2D2B28] text-xs leading-relaxed italic font-sans text-[#2D2B28]/80">
             "We analyze each culinary anomaly. Did a crust collapse prematurely or yeast lose its strength? Every failed bake is a case file solved."
           </p>
-          <p className="text-[#8B735B] text-[10px] font-bold mt-2 font-mono uppercase tracking-widest">— Chef Crumb, Scientist</p>
+          <p className="text-[#8B735B] text-[10px] font-sans italic mt-2 uppercase tracking-widest">— Chef Crumb, Scientist</p>
         </div>
       </div>
 
@@ -55,7 +55,7 @@ export function HomeView({ onStartNewTrouble, history, onSelectSession, onOpenQu
             <ArrowRight className="h-5 w-5 text-white group-hover:translate-x-1.5 transition-transform" />
           </div>
           <div>
-            <h3 className="text-base uppercase tracking-widest font-serif italic font-bold">Start Diagnosis</h3>
+            <h3 className="text-lg uppercase tracking-widest font-serif font-medium">Start Diagnosis</h3>
             <p className="text-[10px] text-white/70 mt-0.5 font-sans uppercase tracking-wider font-semibold">Forensic Baking & Science Investigation</p>
           </div>
         </button>
@@ -70,24 +70,24 @@ export function HomeView({ onStartNewTrouble, history, onSelectSession, onOpenQu
           
           <div className="flex items-center gap-2 mb-1.5">
             <Sparkles className="h-3.5 w-3.5 text-[#8B735B] stroke-[1.5]" />
-            <h4 className="text-[9px] font-bold text-[#8B735B] uppercase tracking-widest font-mono">Molecular Chemistry</h4>
+            <h4 className="text-[9px] font-bold text-[#8B735B] uppercase tracking-widest font-sans italic">Molecular Chemistry</h4>
           </div>
-          <h5 className="text-xs font-serif font-black text-[#2D2B28] mb-1">{chefTip.title}</h5>
+          <h5 className="text-base font-serif font-normal text-[#2D2B28] mb-1">{chefTip.title}</h5>
           <p className="text-[11px] text-[#2D2B28]/80 leading-relaxed font-sans">{chefTip.desc}</p>
         </div>
 
         {/* History Quick-Access or Empty State */}
         <div className="space-y-2.5">
           <div className="flex justify-between items-center px-1">
-            <h4 className="text-[9px] font-bold text-stone-400 uppercase tracking-widest font-mono">Recent Audits</h4>
+            <h4 className="text-[9px] font-bold text-stone-400 uppercase tracking-widest font-sans italic">Recent Audits</h4>
             {history.length > 0 && (
-              <span className="text-[9px] text-[#8B735B] font-bold uppercase tracking-wider font-mono">Journal Logs</span>
+              <span className="text-[9px] text-[#8B735B] font-bold uppercase tracking-wider font-sans italic">Journal Logs</span>
             )}
           </div>
 
           {latestSessions.length === 0 ? (
             <div className="bg-white/50 rounded-2xl p-4 text-center border border-dashed border-[#D4D1C9]">
-              <p className="text-stone-500 text-[10px] uppercase font-mono py-2">No logs saved in baking dossier.</p>
+              <p className="text-stone-500 text-[10px] uppercase font-sans tracking-wider py-2 italic">No logs saved in baking dossier.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-2">
@@ -107,13 +107,13 @@ export function HomeView({ onStartNewTrouble, history, onSelectSession, onOpenQu
                          session.category === 'biscuits' ? '🍪' : '🧁'}
                       </div>
                       <div>
-                        <h4 className="text-xs font-bold text-[#2D2B28] truncate max-w-[190px] font-serif italic">{session.diagnosis.title}</h4>
-                        <p className="text-[9px] text-[#2D2B28]/60 font-mono mt-0.5 uppercase tracking-wider">
+                        <h4 className="text-xs font-medium text-[#2D2B28] truncate max-w-[190px] font-serif">{session.diagnosis.title}</h4>
+                        <p className="text-[9px] text-[#2D2B28]/60 font-sans mt-0.5 uppercase tracking-wider italic">
                           {catInfo?.name} • {new Date(session.date).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
                         </p>
                       </div>
                     </div>
-                    <div className="bg-[#FAF9F6] text-[#2D2B28] text-[9px] font-bold px-2 py-1 rounded border border-[#D4D1C9] font-mono shrink-0 uppercase tracking-wider">
+                    <div className="bg-[#FAF9F6] text-[#2D2B28] text-[9px] font-bold px-2 py-1 rounded border border-[#D4D1C9] font-sans shrink-0 uppercase tracking-widest italic">
                       Inspect
                     </div>
                   </button>

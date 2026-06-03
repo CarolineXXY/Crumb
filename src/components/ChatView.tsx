@@ -175,8 +175,8 @@ export function ChatView({
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#8B735B] border border-white animate-pulse" />
           </div>
           <div>
-            <h3 className="text-xs font-extrabold text-[#2D2B28] uppercase tracking-wider font-serif italic">Chef Crumb Labs</h3>
-            <p className="text-[9px] text-[#8B735B] font-mono uppercase tracking-widest font-bold">Forensic Companion Active</p>
+            <h3 className="text-xs font-serif font-medium text-[#2D2B28] uppercase tracking-wider">Chef Crumb Labs</h3>
+            <p className="text-[9px] text-[#8B735B] font-sans italic mt-0.5 uppercase tracking-wider">Forensic Companion Active</p>
           </div>
         </div>
 
@@ -210,14 +210,14 @@ export function ChatView({
                 {msg.text.split('\n').map((line, lidx) => {
                   if (line.startsWith('###')) {
                     return (
-                      <h4 key={lidx} className="font-serif font-black text-xs text-[#2D2B28] uppercase tracking-wider mt-1 first:mt-0">
+                      <h4 key={lidx} className="font-serif font-medium text-xs text-[#2D2B28] uppercase tracking-wider mt-1 first:mt-0">
                         {line.replace('###', '').trim()}
                       </h4>
                     );
                   }
                   if (line.startsWith('-') || line.startsWith('*')) {
                     return (
-                      <div key={lidx} className="flex items-start gap-1.5 text-[11px] text-[#2D2B28]/80 leading-snug">
+                      <div key={lidx} className="flex items-start gap-1.5 text-[11px] text-[#2D2B28]/80 leading-snug font-sans">
                         <span className="text-[#8B735B] text-xs shrink-0">•</span>
                         <span>{line.substring(2).trim()}</span>
                       </div>
@@ -228,21 +228,21 @@ export function ChatView({
                     if (matchResult) {
                       return (
                         <div key={lidx} className="flex items-start gap-1.5 text-[11px] text-[#2D2B28]/80 leading-snug font-sans">
-                          <span className="text-[#8B735B] font-bold shrink-0">{matchResult[1]}.</span>
+                          <span className="text-[#8B735B] font-medium shrink-0">{matchResult[1]}.</span>
                           <span>{matchResult[2].trim()}</span>
                         </div>
                       );
                     }
                   }
                   return (
-                    <p key={lidx} className="text-[11px] leading-relaxed">
+                    <p key={lidx} className="text-[11px] leading-relaxed font-sans">
                       {line}
                     </p>
                   );
                 })}
               </div>
             </div>
-            <span className="text-[8px] text-stone-400 mt-1 px-1 font-mono uppercase tracking-wider">{msg.timestamp}</span>
+            <span className="text-[8.5px] text-stone-400 mt-1 px-1 font-sans italic uppercase tracking-wider">{msg.timestamp}</span>
           </div>
         ))}
 
@@ -255,7 +255,7 @@ export function ChatView({
                 <div className="bg-[#2D2B28] h-1.5 w-1.5 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                 <div className="bg-[#2D2B28] h-1.5 w-1.5 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
-              <span className="text-[10px] font-mono italic text-[#8B735B] leading-none uppercase tracking-wider">
+              <span className="text-[10px] font-sans italic text-[#8B735B] leading-none uppercase tracking-wider">
                 {loadingPhase}
               </span>
             </div>
@@ -272,7 +272,7 @@ export function ChatView({
               key={tIdx}
               onClick={() => handleSendMessage(tip)}
               disabled={isLoading}
-              className="bg-white hover:bg-[#FAF9F6] text-[#2D2B28] text-[9px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-[#D4D1C9] shadow-2xs shrink-0 transition-colors cursor-pointer whitespace-nowrap active:scale-95 disabled:opacity-50"
+              className="bg-white hover:bg-[#FAF9F6] text-[#2D2B28] text-[9px] font-medium uppercase tracking-wider px-3 py-1.5 rounded-full border border-[#D4D1C9] shadow-2xs shrink-0 transition-colors cursor-pointer whitespace-nowrap active:scale-95 disabled:opacity-50 font-sans"
             >
               {tip}
             </button>

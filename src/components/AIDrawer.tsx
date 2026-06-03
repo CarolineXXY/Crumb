@@ -132,7 +132,7 @@ export function AIDrawer({ isOpen, onClose, currentDiagnosis, category, wizardQu
             <div className="bg-white border-b border-[#D4D1C9] p-4 shrink-0 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-[#8B735B]" />
-                <span className="text-xs font-extrabold text-[#2D2B28] uppercase tracking-wider font-serif italic">Case Enquiry Chat</span>
+                <span className="text-xs font-serif font-medium text-[#2D2B28] uppercase tracking-wider">Case Enquiry Chat</span>
               </div>
               <button
                 onClick={onClose}
@@ -154,8 +154,8 @@ export function AIDrawer({ isOpen, onClose, currentDiagnosis, category, wizardQu
                   <div
                     className={`p-3.5 rounded-2xl text-[11px] leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-[#2D2B28] text-white rounded-tr-none shadow-xs'
-                        : 'bg-white text-[#2D2B28] border border-[#D4D1C9] rounded-tl-none shadow-xs'
+                        ? 'bg-[#2D2B28] text-white rounded-tr-none shadow-xs font-sans'
+                        : 'bg-white text-[#2D2B28] border border-[#D4D1C9] rounded-tl-none shadow-xs font-sans'
                     }`}
                   >
                     {/* Simplified markdown line printing */}
@@ -163,7 +163,7 @@ export function AIDrawer({ isOpen, onClose, currentDiagnosis, category, wizardQu
                       {msg.text.split('\n').map((line, ix) => {
                         if (line.startsWith('###')) {
                           return (
-                            <h4 key={ix} className="font-serif font-black text-xs text-[#2D2B28] uppercase tracking-wider mt-1">
+                            <h4 key={ix} className="font-serif font-medium text-xs text-[#2D2B28] uppercase tracking-wider mt-1">
                               {line.replace('###', '').trim()}
                             </h4>
                           );
@@ -172,12 +172,12 @@ export function AIDrawer({ isOpen, onClose, currentDiagnosis, category, wizardQu
                       })}
                     </div>
                   </div>
-                  <span className="text-[8px] text-stone-400 mt-1 px-1 font-mono uppercase tracking-wider">{msg.timestamp}</span>
+                  <span className="text-[8.5px] text-stone-400 mt-1 px-1 font-sans italic uppercase tracking-wider">{msg.timestamp}</span>
                 </div>
               ))}
               
               {isLoading && (
-                <div className="flex items-center gap-1.5 p-2 bg-white border border-[#D4D1C9] rounded-xl mr-auto max-w-[80%] text-[10px] font-mono italic text-[#8B735B] leading-none uppercase tracking-wider animate-pulse">
+                <div className="flex items-center gap-1.5 p-2 bg-white border border-[#D4D1C9] rounded-xl mr-auto max-w-[80%] text-[10px] font-sans italic text-[#8B735B] leading-none uppercase tracking-wider animate-pulse">
                   <span>Chef is checking the oven...</span>
                 </div>
               )}
