@@ -1,0 +1,6 @@
+{
+  "name": "Crumb",
+  "description": "An intuitive mobile baking troubleshooting assistant that helps home bakers identify why their bake went wrong, teaches the science behind baking, and provides an expert AI companion to dig deeper.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
