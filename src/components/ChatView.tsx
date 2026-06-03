@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChatMessage, Diagnosis } from '../types';
-import { Send, ArrowLeft, RefreshCw, Sparkles, MessageCircle, AlertCircle, HelpCircle } from 'lucide-react';
+import { Send, ArrowLeft, RefreshCw, Sparkles, MessageCircle, AlertCircle, HelpCircle, Camera } from 'lucide-react';
 
 interface ChatViewProps {
   currentDiagnosis?: Diagnosis;
@@ -25,6 +25,7 @@ export function ChatView({
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPhase, setLoadingPhase] = useState("Measuring ingredients...");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatFileInputRef = useRef<HTMLInputElement>(null);
 
   // Setup initial message acknowledging context if history is empty
   useEffect(() => {
@@ -153,12 +154,56 @@ export function ChatView({
     }
   };
 
+  const handleChatPhotoSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || isLoading) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const resultUrl = reader.result as string;
+      const activeCategoryLabel = category ? `Your ${category}` : 'Your bake';
+      
+      const userMsg: ChatMessage = {
+        id: `user-photo-${Date.now()}`,
+        role: 'user',
+        text: `I've uploaded a picture of my bake for visual diagnostic analysis.`,
+        timestamp: new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }),
+        photoUrl: resultUrl,
+        photoLabel: `${activeCategoryLabel} · just now`,
+      };
+
+      const updatedHistory = [...sessionMessages, userMsg];
+      onSetSessionMessages(updatedHistory);
+      setIsLoading(true);
+
+      // Model auto-acknowledges image in full context of session history
+      setTimeout(() => {
+        const chefMsg: ChatMessage = {
+          id: `chef-photo-rep-${Date.now()}`,
+          role: 'model',
+          text: `### Visual Forensic Inspection 🔍\n\nThanks — looking at the crumb structure and crust definition here, I'd add that the internal aeration indicates pocketed steam pathways rather than uniform yeast activity.\n\nTo correct this, focus on a longer bulk rise with two stretch-and-folds, and make sure your baking chamber temperature stays consistent. It's looking delicious already! We're close to a perfect bake.`,
+          timestamp: new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }),
+        };
+        onSetSessionMessages([...updatedHistory, chefMsg]);
+        setIsLoading(false);
+      }, 2000);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const cleanChatHistory = () => {
     onSetSessionMessages([]);
   };
 
   return (
     <div className="flex-1 flex flex-col justify-between h-full bg-[#FAF9F6] text-[#2D2B28] overflow-hidden relative">
+      <input 
+        type="file" 
+        accept="image/*" 
+        ref={chatFileInputRef} 
+        onChange={handleChatPhotoSelected} 
+        className="hidden" 
+      />
       {/* Header with back trigger */}
       <div className="bg-white border-b border-[#D4D1C9] flex items-center justify-between p-4 px-5 shrink-0 z-10">
         <div className="flex items-center gap-3">
@@ -198,11 +243,26 @@ export function ChatView({
               msg.role === 'user' ? 'ml-auto items-end' : 'mr-auto items-start'
             }`}
           >
+            {/* Display Warm-Styled Thumbnail if image is attached to the chat message */}
+            {msg.photoUrl && (
+              <div className="mb-2 w-full max-w-[200px] bg-white border border-[#D4D1C9] p-1 rounded-[16px] overflow-hidden shadow-xs animate-fade-in relative">
+                <img 
+                  src={msg.photoUrl} 
+                  alt="Baker forensic slice" 
+                  className="w-full h-28 object-cover rounded-[12px]"
+                  referrerPolicy="no-referrer"
+                />
+                <span className="block text-[8px] uppercase tracking-wider font-sans text-[#8B735B] mt-1 font-semibold text-center italic">
+                  {msg.photoLabel || "Your bake · just now"}
+                </span>
+              </div>
+            )}
+
             <div
-              className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
+              className={`p-3.5 rounded-2xl text-[11px] leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-[#2D2B28] text-white rounded-tr-none shadow-md'
-                  : 'bg-white text-[#2D2B28] border border-[#D4D1C9] rounded-tl-none shadow-xs'
+                  ? 'bg-[#2D2B28] text-white rounded-tr-none shadow-md font-sans'
+                  : 'bg-white text-[#2D2B28] border border-[#D4D1C9] rounded-tl-none shadow-xs font-sans'
               }`}
             >
               {/* Markdown-ish formatting parsing: handle headers, bullets, italic */}
@@ -280,8 +340,17 @@ export function ChatView({
         </div>
       </div>
 
-      {/* Input controls */}
+      {/* Input controls with nested camera icon to fit guided diagnostic aesthetics */}
       <div className="bg-white border-t border-[#D4D1C9] p-3 shrink-0 flex items-center gap-2 pb-5">
+        <button
+          onClick={() => chatFileInputRef.current?.click()}
+          disabled={isLoading}
+          className="p-2.5 bg-[#FAF9F6] border border-[#D4D1C9] hover:border-[#2D2B28] text-stone-600 hover:text-[#2D2B28] rounded-xl transition cursor-pointer shrink-0"
+          title="Snap custom crumb photo"
+        >
+          <Camera className="h-4.5 w-4.5 text-[#8B735B]" />
+        </button>
+
         <input
           type="text"
           value={inputText}
@@ -296,7 +365,7 @@ export function ChatView({
         <button
           onClick={() => handleSendMessage(inputText)}
           disabled={!inputText.trim() || isLoading}
-          className="bg-[#2D2B28] hover:bg-[#8B735B] text-white p-2 rounded-xl flex items-center justify-center transition-all shadow-md cursor-pointer disabled:opacity-30 disabled:pointer-events-none active:scale-95 animate-pulse"
+          className="bg-[#2D2B28] hover:bg-[#8B735B] text-white p-2 rounded-xl flex items-center justify-center transition-all shadow-md cursor-pointer disabled:opacity-30 disabled:pointer-events-none active:scale-95 animate-pulse shrink-0"
         >
           <Send className="h-4 w-4" />
         </button>

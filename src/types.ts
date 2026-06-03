@@ -33,6 +33,8 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   timestamp: string;
+  photoUrl?: string;
+  photoLabel?: string;
 }
 
 export interface TroubleshootingSession {
@@ -43,4 +45,7 @@ export interface TroubleshootingSession {
   diagnosis: Diagnosis;
   chatHistory: ChatMessage[];
   completed: boolean;
+  photoUrl?: string;
+  photoLabel?: string;
+  photoPreAnalysis?: string;
 }

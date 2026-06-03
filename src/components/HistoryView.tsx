@@ -81,13 +81,26 @@ export function HistoryView({ history, onSelectSession, onClearHistory }: Histor
                     </div>
 
                     {/* Diagnosis details */}
-                    <div>
-                      <h4 className="text-xs font-serif font-medium text-[#2D2B28] group-hover:text-[#8B735B] leading-tight">
-                        {diagnosis.title}
-                      </h4>
-                      <p className="text-[11px] text-[#2D2B28]/70 mt-1 truncate leading-relaxed font-sans">
-                        "{diagnosis.summary}"
-                      </p>
+                    <div className="flex gap-3 justify-between items-start">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xs font-serif font-medium text-[#2D2B28] group-hover:text-[#8B735B] leading-tight font-sans">
+                          {diagnosis.title}
+                        </h4>
+                        <p className="text-[11px] text-[#2D2B28]/70 mt-1 truncate leading-relaxed font-sans">
+                          "{diagnosis.summary}"
+                        </p>
+                      </div>
+
+                      {session.photoUrl && (
+                        <div className="h-10 w-10 shrink-0 rounded-lg overflow-hidden border border-[#D4D1C9] bg-[#FAF9F6] shadow-2xs transition-transform group-hover:scale-105 duration-200">
+                          <img 
+                            src={session.photoUrl} 
+                            alt="Visual audit clip" 
+                            className="h-full w-full object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     {/* Metadata Indicators: Checks, Confidence */}

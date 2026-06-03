@@ -100,12 +100,18 @@ export function HomeView({ onStartNewTrouble, history, onSelectSession, onOpenQu
                     className="w-full bg-white hover:bg-[#FAF9F6] rounded-xl p-3 border border-[#D4D1C9] flex items-center justify-between transition-all shadow-xs hover:border-[#2D2B28] text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="text-lg">
-                        {session.category === 'bread' ? '🍞' :
-                         session.category === 'cake' ? '🍰' :
-                         session.category === 'pastry' ? '🥐' :
-                         session.category === 'biscuits' ? '🍪' : '🧁'}
-                      </div>
+                      {session.photoUrl ? (
+                        <div className="h-8 w-8 rounded-lg overflow-hidden border border-[#D4D1C9] shrink-0">
+                          <img src={session.photoUrl} alt="Bake case" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
+                        </div>
+                      ) : (
+                        <div className="text-lg w-8 h-8 flex items-center justify-center bg-[#FAF9F6] border border-[#D4D1C9] rounded-lg shrink-0">
+                          {session.category === 'bread' ? '🍞' :
+                           session.category === 'cake' ? '🍰' :
+                           session.category === 'pastry' ? '🥐' :
+                           session.category === 'biscuits' ? '🍪' : '🧁'}
+                        </div>
+                      )}
                       <div>
                         <h4 className="text-xs font-medium text-[#2D2B28] truncate max-w-[190px] font-serif">{session.diagnosis.title}</h4>
                         <p className="text-[9px] text-[#2D2B28]/60 font-sans mt-0.5 uppercase tracking-wider italic">

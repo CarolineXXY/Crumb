@@ -5,19 +5,74 @@ import { ArrowLeft, HelpCircle, Lightbulb, ChevronRight, MessageSquare, Sparkles
 
 interface SymptomFlowViewProps {
   category: BakeCategory;
+  photoUrl: string | null;
+  preAnalysis: string | null;
   onCancel: () => void;
   onComplete: (answers: Record<string, { questionText: string; answerLabel: string; value: string }>) => void;
   onOpenQuickChat: (currentQuestionContext?: string) => void;
 }
 
-export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickChat }: SymptomFlowViewProps) {
+export function SymptomFlowView({ category, photoUrl, preAnalysis, onCancel, onComplete, onOpenQuickChat }: SymptomFlowViewProps) {
   // Questions of chosen category
   const categoryQuestions = QUESTIONS[category] || [];
   const initialQuestion = categoryQuestions[0];
 
+  // Detect and define pre-fillable symptom mappings using photo pre-analysis
+  const getPreFilledAnswer = () => {
+    if (!photoUrl || !preAnalysis) return null;
+    if (category === 'cake' && preAnalysis.includes('sinking in the centre')) {
+      return {
+        qId: 'cake_symptom',
+        questionText: 'What was the primary visual defect of your cake?',
+        answerLabel: 'A deep crater in the very center',
+        value: 'sunken_middle',
+        nextId: 'cake_leavening'
+      };
+    }
+    if (category === 'bread' && preAnalysis.includes('dense, heavy crumb')) {
+      return {
+        qId: 'bread_crumb',
+        questionText: 'How does the crumb (interior) of your baked bread feel and look?',
+        answerLabel: 'Dense, heavy, and slightly gummy',
+        value: 'dense_gummy_heavy',
+        nextId: 'bread_rise_stage'
+      };
+    }
+    if (category === 'biscuits' && preAnalysis.includes('scorching on the bottom')) {
+      return {
+        qId: 'bisc_symptom',
+        questionText: 'What is the main issue with your cookies or biscuits?',
+        answerLabel: 'Perfect centers but completely black or burnt bottoms',
+        value: 'burnt_bottoms',
+        nextId: 'bisc_dough_temp' // The questions list has bisc_dough_temp following bisc_symptom:spread_flat_puddle, but for other branching let's check
+      };
+    }
+    return null;
+  };
+
+  const prefill = getPreFilledAnswer();
+
   // We track the branching path of question IDs as an array
-  const [path, setPath] = useState<string[]>([initialQuestion.id]);
-  const [answers, setAnswers] = useState<Record<string, { questionText: string; answerLabel: string; value: string }>>({});
+  const [path, setPath] = useState<string[]>(() => {
+    if (prefill && prefill.nextId && categoryQuestions.some(q => q.id === prefill.nextId)) {
+      return [initialQuestion.id, prefill.nextId];
+    }
+    return [initialQuestion.id];
+  });
+
+  const [answers, setAnswers] = useState<Record<string, { questionText: string; answerLabel: string; value: string }>>(() => {
+    if (prefill) {
+      return {
+        [prefill.qId]: {
+          questionText: prefill.questionText,
+          answerLabel: prefill.answerLabel,
+          value: prefill.value,
+        }
+      };
+    }
+    return {};
+  });
+
   const [showingTip, setShowingTip] = useState(true);
 
   const currentQuestionId = path[path.length - 1];
@@ -58,7 +113,10 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
   };
 
   const handleBack = () => {
-    if (path.length <= 1) {
+    // If we have a prefilled first item and our current path length is 2, going back resets path and answers
+    if (prefill && path.length <= 2) {
+      onCancel();
+    } else if (path.length <= 1) {
       onCancel();
     } else {
       const newPath = [...path];
@@ -74,15 +132,15 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
     }
   };
 
-  // Estimate a realistic progress ratio based on the current step out of general maximum depth (max 6-8)
+  // Estimate progress based on max complexity limit
   const maxEstimatedSteps = 6;
   const progressPercent = Math.min(Math.round((path.length / maxEstimatedSteps) * 100), 100);
 
   return (
     <div className="flex-1 p-6 flex flex-col justify-between bg-[#FAF9F6] text-[#2D2B28]">
       {/* Top Navigation & Status */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="space-y-3.5">
+        <div className="flex items-center justify-between animate-fade-in">
           <button
             onClick={handleBack}
             className="flex items-center gap-1.5 text-xs text-[#2D2B28]/70 hover:text-[#2D2B28] font-medium py-1 transition-colors group cursor-pointer"
@@ -96,17 +154,29 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
           </span>
         </div>
 
-        {/* Progress Bar with elegant editorial color scheme */}
-        <div className="w-full h-1.5 bg-[#E8E4DA] rounded-full overflow-hidden">
+        {/* Thin gold progress bar */}
+        <div className="w-full h-1 bg-[#E8E4DA] rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#8B735B] rounded-full transition-all duration-300 ease-out"
+            className="h-full bg-[#D4AF37] rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
+
+        {/* Visual photo recognition feedback banner if applicable */}
+        {prefill && path.length === 2 && (
+          <div className="bg-amber-50/70 border border-amber-200/60 rounded-xl p-2 flex items-center justify-between text-[10.5px] text-amber-900 gap-2 animate-fade-in">
+            <div className="flex items-center gap-1.5 font-sans">
+              <Sparkles className="h-3.5 w-3.5 text-amber-700 animate-pulse shrink-0" />
+              <span>
+                First choice (<strong>{prefill.answerLabel}</strong>) skipped via photo diagnostics.
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Center Question Segment */}
-      <div className="my-5 space-y-4 flex-1 flex flex-col justify-center">
+      <div className="my-4 space-y-4 flex-1 flex flex-col justify-center">
         <div>
           <h3 className="text-xl font-serif font-medium text-[#2D2B28] leading-tight tracking-tight">
             {currentQuestion.text}
@@ -114,7 +184,7 @@ export function SymptomFlowView({ category, onCancel, onComplete, onOpenQuickCha
         </div>
 
         {/* Big Tap Target Choices in Paper Editorial style */}
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {currentQuestion.options.map((option) => (
             <button
               key={option.value}

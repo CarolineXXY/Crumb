@@ -1,3 +1,4 @@
+import React from 'react';
 import { CATEGORIES } from '../data/questions';
 import { BakeCategory } from '../types';
 import { ArrowLeft, Wheat, Cake, Cookie, Utensils, Smile } from 'lucide-react';
@@ -24,6 +25,28 @@ const IconMap = (iconName: string) => {
 };
 
 export function CategorySelectionView({ onSelectCategory, onCancel }: CategorySelectionViewProps) {
+  // Read favorite categories from profile preferences
+  const preferredFocuses: string[] = React.useMemo(() => {
+    try {
+      const saved = localStorage.getItem('crumb_profile_bake_types');
+      return saved ? JSON.parse(saved) : ['Bread', 'Cakes'];
+    } catch {
+      return ['Bread', 'Cakes'];
+    }
+  }, []);
+
+  const isPreferred = (catId: string) => {
+    // Map catId to matching focus names
+    const mapping: Record<string, string> = {
+      'bread': 'Bread',
+      'cake': 'Cakes',
+      'pastry': 'Pastry',
+      'biscuits': 'Biscuits',
+      'other': 'Other'
+    };
+    return preferredFocuses.includes(mapping[catId] || '');
+  };
+
   return (
     <div className="flex-1 p-6 flex flex-col justify-between bg-[#FAF9F6] text-[#2D2B28]">
       {/* Header with Back button */}
@@ -47,23 +70,39 @@ export function CategorySelectionView({ onSelectCategory, onCancel }: CategorySe
 
       {/* Grid of Choices - Large tap targets with clean bone-like cards */}
       <div className="my-6 grid grid-cols-1 gap-3 flex-1 overflow-y-auto pr-1">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => onSelectCategory(cat.id)}
-            className="w-full group text-left rounded-2xl p-4 border border-[#D4D1C9] bg-white flex items-center gap-4 transition-all duration-200 hover:scale-[1.01] hover:border-[#2D2B28] cursor-pointer"
-          >
-            <div className="p-3 rounded-xl bg-[#FAF9F6] border border-[#D4D1C9]/60 group-hover:bg-[#E8E4DA] transition-colors">
-              {IconMap(cat.icon)}
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xs uppercase tracking-widest font-medium text-[#2D2B28] flex items-center justify-between">
-                <span>{cat.name}</span>
-              </h3>
-              <p className="text-[11px] text-[#2D2B28]/85 mt-1 leading-relaxed font-sans">{cat.description}</p>
-            </div>
-          </button>
-        ))}
+        {CATEGORIES.map((cat) => {
+          const pref = isPreferred(cat.id);
+          return (
+            <button
+              key={cat.id}
+              onClick={() => onSelectCategory(cat.id)}
+              className={`w-full group text-left rounded-2xl p-4 border flex items-center gap-4 transition-all duration-200 hover:scale-[1.01] cursor-pointer ${
+                pref 
+                  ? 'border-[#8B735B]/75 bg-[#FAF6EE] shadow-2xs hover:border-[#8B735B]' 
+                  : 'border-[#D4D1C9] bg-white hover:border-[#2D2B28]'
+              }`}
+            >
+              <div className={`p-3 rounded-xl border transition-colors ${
+                pref 
+                  ? 'bg-amber-100/40 border-[#8B735B]/30 group-hover:bg-[#E8E4DA]' 
+                  : 'bg-[#FAF9F6] border-[#D4D1C9]/60 group-hover:bg-[#E8E4DA]'
+              }`}>
+                {IconMap(cat.icon)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xs uppercase tracking-widest font-bold text-[#2D2B28] flex items-center justify-between">
+                  <span>{cat.name}</span>
+                  {pref && (
+                    <span className="px-1.5 py-0.5 bg-[#8B735B]/10 text-[#8B735B] rounded text-[8px] uppercase tracking-widest font-extrabold font-sans">
+                      ★ PREFERENCE
+                    </span>
+                  )}
+                </h3>
+                <p className="text-[11px] text-[#2D2B28]/85 mt-1 leading-relaxed font-sans">{cat.description}</p>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {/* Educational message */}

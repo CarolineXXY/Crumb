@@ -5,10 +5,12 @@ import { MobileFrame } from './components/MobileFrame';
 import { HomeView } from './components/HomeView';
 import { CategorySelectionView } from './components/CategorySelectionView';
 import { SymptomFlowView } from './components/SymptomFlowView';
+import { PhotoPromptView } from './components/PhotoPromptView';
 import { DiagnosisView } from './components/DiagnosisView';
 import { ChatView } from './components/ChatView';
 import { HistoryView } from './components/HistoryView';
 import { AIDrawer } from './components/AIDrawer';
+import { ProfileView } from './components/ProfileView';
 
 // Initial visual mock entries for immediate design polish & scannability
 const INITIAL_DEMO_SESSIONS: TroubleshootingSession[] = [
@@ -67,10 +69,15 @@ const INITIAL_DEMO_SESSIONS: TroubleshootingSession[] = [
 ];
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'troubleshoot' | 'history' | 'chat'>('troubleshoot');
-  const [wizardState, setWizardState] = useState<'home' | 'category' | 'questions' | 'diagnosis'>('home');
+  const [activeTab, setActiveTab] = useState<'troubleshoot' | 'history' | 'chat' | 'profile'>('troubleshoot');
+  const [wizardState, setWizardState] = useState<'home' | 'photo-prompt' | 'category' | 'questions' | 'diagnosis'>('home');
   const [selectedCategory, setSelectedCategory] = useState<BakeCategory | null>(null);
   const [activeSession, setActiveSession] = useState<TroubleshootingSession | null>(null);
+  
+  // Custom photo parameters for active session
+  const [currentPhotoUrl, setCurrentPhotoUrl] = useState<string | null>(null);
+  const [currentPhotoLabel, setCurrentPhotoLabel] = useState<string | null>(null);
+  const [currentPhotoPreAnalysis, setCurrentPhotoPreAnalysis] = useState<string | null>(null);
   
   // Storage for audit logs
   const [history, setHistory] = useState<TroubleshootingSession[]>([]);
@@ -110,7 +117,10 @@ export default function App() {
   const handleStartTroubleshoot = () => {
     setSelectedCategory(null);
     setActiveSession(null);
-    setWizardState('category');
+    setCurrentPhotoUrl(null);
+    setCurrentPhotoLabel(null);
+    setCurrentPhotoPreAnalysis(null);
+    setWizardState('photo-prompt');
     setActiveTab('troubleshoot');
   };
 
@@ -133,7 +143,7 @@ export default function App() {
 
     const matchedDiagnosis = getDiagnosisForAnswers(selectedCategory, answerKeyMap);
 
-    // Create session audit log
+    // Create session audit log with photo parameters if available
     const newSession: TroubleshootingSession = {
       id: `session-${Date.now()}`,
       date: new Date().toISOString(),
@@ -142,6 +152,9 @@ export default function App() {
       diagnosis: matchedDiagnosis,
       chatHistory: [],
       completed: true,
+      photoUrl: currentPhotoUrl || undefined,
+      photoLabel: currentPhotoLabel || undefined,
+      photoPreAnalysis: currentPhotoPreAnalysis || undefined,
     };
 
     const updatedHistory = [...history, newSession];
@@ -173,14 +186,34 @@ export default function App() {
     // Switch to dedicated full-tab chat and seed Chef with context immediately 
     setActiveTab('chat');
     
+    let chatPreseedText = `### Double-checking custom science! 🧑‍🍳\n\nI see you are inquiring about **"${activeSession.diagnosis.title}"** inside the **${activeSession.category}** group.\n\nLet's study the physics of this! I can guide you through the water/flour measurements, discuss hot-spot thermal baking corrections, or explain enzyme fermentation ratios. What details can I clarify?`;
+
+    // Visual companion acknowledgement which includes visual pre-analysis details
+    if (activeSession.photoUrl) {
+      chatPreseedText = `### Reviewing Forensic Visual Evidence 📸\n\nI see you uploaded an image of your **${activeSession.category}** for our audit report.\n\nLooking at the visual evidence of **"${activeSession.diagnosis.title}"** (*${activeSession.photoPreAnalysis || "crust surface irregularities detected"}*), the cell-walls of the gluten networks show strong signs of failure.\n\nLet's study how this happens! I can help you inspect liquid temperature profiles, evaluate structural gluten development, or map oven convection pathways. Which of these shall we look at first?`;
+    }
+
     const initChefMsg: ChatMessage = {
       id: 'diag-chef-preseed',
       role: 'model',
-      text: `### Double-checking custom science! 🧑‍🍳\n\nI see you are inquiring about **"${activeSession.diagnosis.title}"** inside the **${activeSession.category}** group.\n\nLet's study the physics of this! I can guide you through the water/flour measurements, discuss hot-spot thermal baking corrections, or explain enzyme fermentation ratios. What details can I clarify?`,
+      text: chatPreseedText,
       timestamp: new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }),
     };
 
     setSessionChatMessages([initChefMsg]);
+  };
+
+  const handleUpdateSessionChatMessages = (messages: ChatMessage[]) => {
+    setSessionChatMessages(messages);
+    if (activeSession) {
+      const updatedSession: TroubleshootingSession = {
+        ...activeSession,
+        chatHistory: messages,
+      };
+      setActiveSession(updatedSession);
+      const updatedHistory = history.map(s => s.id === activeSession.id ? updatedSession : s);
+      saveHistoryToStorage(updatedHistory);
+    }
   };
 
   const handleOpenGlobalChatFromNotch = (questionContextText?: string) => {
@@ -210,6 +243,23 @@ export default function App() {
             />
           )}
 
+          {wizardState === 'photo-prompt' && (
+            <PhotoPromptView
+              onNext={(pUrl, pAnalysis) => {
+                setCurrentPhotoUrl(pUrl);
+                setCurrentPhotoLabel("Your bake · just now");
+                setCurrentPhotoPreAnalysis(pAnalysis);
+                setWizardState('category');
+              }}
+              onSkip={() => {
+                setCurrentPhotoUrl(null);
+                setCurrentPhotoLabel(null);
+                setCurrentPhotoPreAnalysis(null);
+                setWizardState('category');
+              }}
+            />
+          )}
+
           {wizardState === 'category' && (
             <CategorySelectionView
               onSelectCategory={handleCategorySelected}
@@ -220,6 +270,8 @@ export default function App() {
           {wizardState === 'questions' && selectedCategory && (
             <SymptomFlowView
               category={selectedCategory}
+              photoUrl={currentPhotoUrl}
+              preAnalysis={currentPhotoPreAnalysis}
               onCancel={handleCancelNewTroubleshoot}
               onComplete={handleSymptomFlowComplete}
               onOpenQuickChat={(contextQuestion) => handleOpenGlobalChatFromNotch(contextQuestion)}
@@ -253,12 +305,20 @@ export default function App() {
           category={activeSession?.category}
           answers={activeSession?.answers}
           sessionMessages={sessionChatMessages}
-          onSetSessionMessages={setSessionChatMessages}
+          onSetSessionMessages={handleUpdateSessionChatMessages}
           onBackToHome={() => setActiveTab('troubleshoot')}
         />
       )}
 
-      {/* 4. Global persistent helper sliding overlay (AIDrawer) */}
+      {/* 4. Baker Registry Profile Tab */}
+      {activeTab === 'profile' && (
+        <ProfileView
+          history={history}
+          onBackToHome={() => setActiveTab('troubleshoot')}
+        />
+      )}
+
+      {/* 5. Global persistent helper sliding overlay (AIDrawer) */}
       <AIDrawer
         isOpen={globalChatOpen}
         onClose={() => setGlobalChatOpen(false)}

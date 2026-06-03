@@ -49,6 +49,26 @@ export function DiagnosisView({ session, onBackToHome, onLaunchAIChat, onRestart
       {/* Diagnosis Report Card */}
       <div className="my-5 space-y-4 flex-1">
         
+        {/* Visual Case Evidence containing actual uploaded image and pre-analysis summary */}
+        {session.photoUrl && (
+          <div className="bg-white rounded-2xl p-3.5 border border-[#D4D1C9] shadow-xs flex items-center gap-4 animate-fade-in">
+            <div className="h-16 w-16 shrink-0 rounded-xl overflow-hidden bg-[#FAF9F6] border border-[#D4D1C9]">
+              <img 
+                src={session.photoUrl} 
+                alt="Shared bake snapshot" 
+                className="h-full w-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-[9px] font-bold text-[#8B735B] uppercase tracking-wider block italic font-sans">Visual Forensic Evidence</span>
+              <p className="text-[11px] text-[#2D2B28]/85 leading-snug font-sans mt-1 italic pl-1 border-l-2 border-[#8B735B]/40">
+                "{session.photoPreAnalysis || "Surface texture anomalies detected on the bake crust."}"
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Main Title & Confidence */}
         <div className="bg-white rounded-2xl p-5 border border-[#D4D1C9] shadow-md space-y-3.5 relative overflow-hidden">
           {/* Accent decoration */}
